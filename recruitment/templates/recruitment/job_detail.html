@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block title %}{{ job.title }} - JobPortal{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-body p-4">
+                    <h1 class="mb-3">{{ job.title }}</h1>
+                    <div class="mb-4">
+                        <span class="badge bg-primary me-2">{{ job.get_job_type_display }}</span>
+                        {% if job.salary_range %}
+                            <span class="badge bg-success">{{ job.salary_range }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h5><i class="bi bi-building"></i> Company</h5>
+                        <p>{{ job.employer.employer_profile.company_name }}</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5><i class="bi bi-geo-alt"></i> Location</h5>
+                        <p>{{ job.location }}</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5><i class="bi bi-file-text"></i> Description</h5>
+                        <p style="white-space: pre-line;">{{ job.description }}</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5><i class="bi bi-list-check"></i> Requirements</h5>
+                        <p style="white-space: pre-line;">{{ job.requirements }}</p>
+                    </div>
+
+                    {% if job.deadline %}
+                        <div class="alert alert-warning">
+                            <i class="bi bi-calendar-x"></i> Application deadline: {{ job.deadline|date:"F d, Y" }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow sticky-top" style="top: 20px;">
+                <div class="card-body">
+                    <h5 class="mb-3">Apply for this position</h5>
+                    
+                    {% if user.role == 'applicant' %}
+                        {% if has_applied %}
+                            <div class="alert alert-info">
+                                <i class="bi bi-check-circle"></i> You have already applied for this job
+                            </div>
+                            <a href="{% url 'recruitment:my_applications' %}" class="btn btn-outline-primary w-100">View Application</a>
+                        {% else %}
+                            <a href="{% url 'recruitment:apply_job' job.pk %}" class="btn btn-primary w-100 mb-3">
+                                <i class="bi bi-send"></i> Apply Now
+                            </a>
+                        {% endif %}
+                    {% elif user.role == 'employer' %}
+                        {% if job.employer == user %}
+                            <div class="d-grid gap-2">
+                                <a href="{% url 'recruitment:job_update' job.pk %}" class="btn btn-warning">
+                                    <i class="bi bi-pencil"></i> Edit Job
+                                </a>
+                                <a href="{% url 'recruitment:job_applications' job.pk %}" class="btn btn-info">
+                                    <i class="bi bi-people"></i> View Applications
+                                </a>
+                                <a href="{% url 'recruitment:job_delete' job.pk %}" class="btn btn-danger">
+                                    <i class="bi bi-trash"></i> Delete Job
+                                </a>
+                            </div>
+                        {% else %}
+                            <p class="text-muted">Only applicants can apply</p>
+                        {% endif %}
+                    {% else %}
+                        <p class="text-muted">Login as an applicant to apply</p>
+                    {% endif %}
+
+                    <hr>
+                    <div class="text-muted small">
+                        <p><i class="bi bi-clock-history"></i> Posted {{ job.created_at|timesince }} ago</p>
+                        <p><i class="bi bi-eye"></i> {{ job.applications.count }} applications</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% block title %}My Jobs - JobPortal{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="display-4"><i class="bi bi-briefcase-fill"></i> My Job Postings</h1>
+                <p class="lead">Manage your job listings</p>
+            </div>
+            <a href="{% url 'recruitment:job_create' %}" class="btn btn-light btn-lg">
+                <i class="bi bi-plus-circle"></i> Post New Job
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center shadow">
+                <div class="card-body">
+                    <i class="bi bi-briefcase display-4 text-primary"></i>
+                    <h3 class="mt-2">{{ jobs.count }}</h3>
+                    <p class="text-muted mb-0">Total Jobs</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center shadow">
+                <div class="card-body">
+                    <i class="bi bi-check-circle display-4 text-success"></i>
+                    <h3 class="mt-2">{{ jobs|length }}</h3>
+                    <p class="text-muted mb-0">Active Jobs</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center shadow">
+                <div class="card-body">
+                    <i class="bi bi-people display-4 text-info"></i>
+                    <h3 class="mt-2">
+                        {% for job in jobs %}{{ job.app_count }}{% if not forloop.last %}+{% endif %}{% endfor %}
+                    </h3>
+                    <p class="text-muted mb-0">Applications</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center shadow">
+                <div class="card-body">
+                    <i class="bi bi-eye display-4 text-warning"></i>
+                    <h3 class="mt-2">{{ jobs.count }}</h3>
+                    <p class="text-muted mb-0">Views</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% for job in jobs %}
+        <div class="card job-card shadow mb-3">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-7">
+                        <h4 class="mb-2">{{ job.title }}</h4>
+                        <p class="text-muted mb-2">
+                            <i class="bi bi-geo-alt"></i> {{ job.location }} | 
+                            <i class="bi bi-clock"></i> {{ job.get_job_type_display }}
+                            {% if job.salary_range %}
+                                | <i class="bi bi-cash"></i> {{ job.salary_range }}
+                            {% endif %}
+                        </p>
+                        <div>
+                            <span class="badge bg-info me-2">
+                                <i class="bi bi-people"></i> {{ job.app_count }} Applications
+                            </span>
+                            {% if job.is_active %}
+                                <span class="badge bg-success">
+                                    <i class="bi bi-check-circle"></i> Active
+                                </span>
+                            {% else %}
+                                <span class="badge bg-secondary">
+                                    <i class="bi bi-pause-circle"></i> Inactive
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-5 text-md-end mt-3 mt-md-0">
+                        <small class="text-muted d-block mb-3">Posted {{ job.created_at|timesince }} ago</small>
+                        <div class="btn-group" role="group">
+                            <a href="{% url 'recruitment:job_detail' job.pk %}" class="btn btn-sm btn-outline-primary" title="View">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a href="{% url 'recruitment:job_applications' job.pk %}" class="btn btn-sm btn-outline-info" title="Applications">
+                                <i class="bi bi-people"></i> {{ job.app_count }}
+                            </a>
+                            <a href="{% url 'recruitment:job_update' job.pk %}" class="btn btn-sm btn-outline-warning" title="Edit">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a href="{% url 'recruitment:job_delete' job.pk %}" class="btn btn-sm btn-outline-danger" title="Delete">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                {% if job.deadline %}
+                    <div class="alert alert-warning mt-3 mb-0">
+                        <i class="bi bi-calendar-x"></i> Application deadline: {{ job.deadline|date:"F d, Y" }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% empty %}
+        <div class="card text-center py-5">
+            <div class="card-body">
+                <i class="bi bi-inbox display-1 text-muted"></i>
+                <h3 class="mt-3">No jobs posted yet</h3>
+                <p class="text-muted mb-4">Start attracting talent by posting your first job</p>
+                <a href="{% url 'recruitment:job_create' %}" class="btn btn-primary btn-lg">
+                    <i class="bi bi-plus-circle"></i> Post Your First Job
+                </a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

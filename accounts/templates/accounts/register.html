@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Register - JobPortal{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center" style="min-height: 70vh; align-items: center;">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body p-5">
+                    <h2 class="text-center mb-4">
+                        <i class="bi bi-person-plus-fill"></i> Create Account
+                    </h2>
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <button type="submit" class="btn btn-primary w-100 btn-lg mb-3">Register</button>
+                    </form>
+                    <p class="text-center mb-0">
+                        Already have an account? <a href="{% url 'accounts:login' %}">Login here</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Apply for {{ job.title }} - JobPortal{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white border-bottom">
+                    <h3 class="mb-0"><i class="bi bi-send-fill me-2"></i>Apply for Position</h3>
+                </div>
+                <div class="card-body p-4">
+                    <div class="alert alert-info">
+                        <h5 class="alert-heading"><i class="bi bi-briefcase"></i> {{ job.title }}</h5>
+                        <p class="mb-1"><strong>Company:</strong> {{ job.employer.employer_profile.company_name }}</p>
+                        <p class="mb-1"><strong>Location:</strong> {{ job.location }}</p>
+                        <p class="mb-0"><strong>Type:</strong> {{ job.get_job_type_display }}</p>
+                    </div>
+
+                    {% if user.applicant_profile.resume %}
+                        <div class="alert alert-success">
+                            <i class="bi bi-check-circle"></i> 
+                            <strong>Resume on file:</strong> 
+                            <a href="{{ user.applicant_profile.resume.url }}" target="_blank" class="alert-link">View Resume</a>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-warning">
+                            <i class="bi bi-exclamation-triangle"></i> 
+                            <strong>No resume uploaded!</strong> 
+                            <a href="{% url 'accounts:profile' %}" class="alert-link">Upload your resume first</a>
+                        </div>
+                    {% endif %}
+
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="confirmCheck" required>
+                            <label class="form-check-label" for="confirmCheck">
+                                I confirm that all information provided is accurate and I meet the job requirements.
+                            </label>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg" {% if not user.applicant_profile.resume %}disabled title="Please upload resume first"{% endif %}>
+                                <i class="bi bi-send"></i> Submit Application
+                            </button>
+                            <a href="{% url 'recruitment:job_detail' job.pk %}" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

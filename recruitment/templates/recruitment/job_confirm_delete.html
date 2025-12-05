@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}Delete Job - JobPortal{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Confirm Deletion</h4>
+                </div>
+                <div class="card-body p-4">
+                    <div class="alert alert-danger">
+                        <strong>Warning:</strong> This action cannot be undone. You are about to permanently delete this job posting and all associated data.
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="mb-3">{{ job.title }}</h5>
+                            <p class="mb-2">
+                                <i class="bi bi-geo-alt me-1"></i>{{ job.location }} | 
+                                <i class="bi bi-clock me-1"></i>{{ job.get_job_type_display }}
+                            </p>
+                            <p class="mb-2">
+                                <i class="bi bi-calendar me-1"></i>Posted {{ job.created_at|date:"F d, Y" }}
+                            </p>
+                            <p class="mb-0">
+                                <i class="bi bi-people me-1"></i>{{ job.applications.count }} Application(s)
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <h6 class="alert-heading mb-2">What will be deleted:</h6>
+                        <ul class="mb-0">
+                            <li>The job posting</li>
+                            <li>All {{ job.applications.count }} application(s)</li>
+                            <li>All scheduled interviews</li>
+                            <li>All associated data</li>
+                        </ul>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="form-check mb-4">
+                            <input class="form-check-input" type="checkbox" id="confirmDelete" required>
+                            <label class="form-check-label" for="confirmDelete">
+                                I understand this action is permanent and cannot be reversed
+                            </label>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger btn-lg">
+                                <i class="bi bi-trash"></i> Yes, Delete Permanently
+                            </button>
+                            <a href="{% url 'recruitment:job_detail' job.pk %}" class="btn btn-outline-secondary">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

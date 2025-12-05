@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block title %}Browse Jobs - JobPortal{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1 class="display-4"><i class="bi bi-search"></i> Browse Jobs</h1>
+        <p class="lead">Find your dream job today</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-6">
+                    <input type="text" name="search" class="form-control" placeholder="Search jobs, skills, location..." value="{{ search }}">
+                </div>
+                <div class="col-md-4">
+                    <select name="job_type" class="form-select">
+                        <option value="">All Job Types</option>
+                        <option value="full-time" {% if job_type == 'full-time' %}selected{% endif %}>Full Time</option>
+                        <option value="part-time" {% if job_type == 'part-time' %}selected{% endif %}>Part Time</option>
+                        <option value="contract" {% if job_type == 'contract' %}selected{% endif %}>Contract</option>
+                        <option value="internship" {% if job_type == 'internship' %}selected{% endif %}>Internship</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for job in jobs %}
+            <div class="col-md-12 mb-3">
+                <div class="job-card card">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h4 class="mb-2">
+                                    <a href="{% url 'recruitment:job_detail' job.pk %}" class="text-decoration-none">{{ job.title }}</a>
+                                </h4>
+                                <p class="text-muted mb-2">
+                                    <i class="bi bi-building"></i> {{ job.employer.employer_profile.company_name }} | 
+                                    <i class="bi bi-geo-alt"></i> {{ job.location }} | 
+                                    <i class="bi bi-clock"></i> {{ job.get_job_type_display }}
+                                </p>
+                                <p class="mb-0">{{ job.description|truncatewords:30 }}</p>
+                            </div>
+                            <div class="col-md-4 text-md-end">
+                                {% if job.salary_range %}
+                                    <p class="text-success fw-bold mb-2"><i class="bi bi-cash"></i> {{ job.salary_range }}</p>
+                                {% endif %}
+                                <small class="text-muted d-block mb-2">Posted {{ job.created_at|timesince }} ago</small>
+                                <a href="{% url 'recruitment:job_detail' job.pk %}" class="btn btn-primary">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="card text-center py-5">
+                    <div class="card-body">
+                        <i class="bi bi-inbox display-1 text-muted"></i>
+                        <h3 class="mt-3">No jobs found</h3>
+                        <p class="text-muted">Try adjusting your search criteria</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

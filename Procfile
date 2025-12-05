@@ -1,0 +1,1 @@
+web: gunicorn Job_Recruitment_System.wsgi --log-file -
