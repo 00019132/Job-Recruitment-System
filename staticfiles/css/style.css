@@ -1,0 +1,43 @@
+:root {
+    --bs-primary: #2563eb;
+    --bs-primary-rgb: 37, 99, 235;
+    --bs-success: #059669;
+    --bs-warning: #d97706;
+    --bs-danger: #dc2626;
+    --bs-info: #0891b2;
+}
+
+body {
+    background-color: #f8fafc;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+.card {
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    transition: all 0.2s ease;
+}
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.badge {
+    font-weight: 500;
+    font-size: 0.75rem;
+}
+.bg-primary { background-color: #dbeafe !important; color: #1e40af !important; }
+.bg-success { background-color: #d1fae5 !important; color: #065f46 !important; }
+.bg-warning { background-color: #fef3c7 !important; color: #92400e !important; }
+.bg-danger  { background-color: #fee2e2 !important; color: #991b1b !important; }
+.bg-info    { background-color: #cffafe !important; color: #0e7490 !important; }
+
+.job-card {
+    border-left: 4px solid #2563eb;
+}
+
+.alert-warning {
+    background-color: #fffbeb;
+    border-color: #fde68a;
+    color: #92400e;
+}
